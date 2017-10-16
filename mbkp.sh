@@ -1,4 +1,9 @@
 #!/bin/bash
+# 20171016
+# mikrotik-backup script
+# version 1.2
+# author Tenhi
+
 # Initial checks
 [[ -z "$1" ]] && echo "ERR: no config file provided" && exit 1
 ! [[ -r "$1" ]] && echo "ERR: cannot  read $1" && exit 1
@@ -9,8 +14,8 @@ TGT_PORT="22"                                           # default ssh-port
 TGT_USER="rbkp02"                                       # Default backup user
 IDL="3s"                                                # Default idle time
 #### Backup variables ##############################
-BKP_BINPWD="NvLB37zchdor9Y4E8KSpxibWHATfjstnw"          # Default password for binary backup    33
-BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for export          33
+BKP_BINPWD="NvLB37zchdor9Y4E8KSpxibWHATfjstnw"          # Default password for binary backup    33cr
+BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for export          33cr
 ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
