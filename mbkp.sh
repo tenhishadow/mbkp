@@ -19,8 +19,6 @@ BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for 
 ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
-#### Logging #######################################
-LOG=$ST_ROOT/"LOG.txt"                                  # Default log-file location
 
 #######################################################################################################################
 # Importing target config where you can override options
@@ -59,6 +57,8 @@ SCP_STR="$CMD_SCP -2 -4 -B $SSH_OPT -P $TGT_PORT $TGT_USER@$TGT_IP:/$TGT_BKPNAME
 
 function fn_check_log {
 # Function for checking need of creating logfile
+LOG=$ST_ROOT/"LOG.txt"                                  # log-file location
+
 
  if [[ -r $LOG ]]
   then
