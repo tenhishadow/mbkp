@@ -23,3 +23,13 @@ MLOG="/var/log/mikrotik_backup/log"
 - /usr/local/bin/mbkp		executable bash script with default variables
 
 - /var/log/mikrotik_backup/log	logfile to trace script execution results
+
+This script does two backups (binary and export). Binary backup is protected with password
+default password is included in executable script and it can be overrieded via custom config
+file. Export is also password-protected but via openssl. Script export config to the temp file
+as a plain text via ssh, then it encrypt this file and move it to the destination.
+Encrypted exported config can be easly decrypted with openssl command:
+```
+ # NOTE: decrypt the file
+ # openssl des3 -d -salt -in encryptedfile.txt -out normalfile.txt
+```

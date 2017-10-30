@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# 20171016
 # mikrotik-backup script
-
-# version 1.2
 # author Tenhi
 
 # Initial checks
@@ -85,7 +82,7 @@ README=$ST_ROOT"/README.txt"      # README File
 
  if [[ -r $README ]]
   then
-   echo "DBG: $README is readable.. skip initializing it."
+   return 0
   else
    echo "
 # ===
@@ -142,18 +139,14 @@ function fn_backup_export {
  # openssl des3 -d -salt -in encryptedfile.txt -out normalfile.txt
  EXP_TMP_FILE="/tmp/"$RANDOM".export"
 
-# sleep $IDL && $SSH_STR export > $ST_FULL$TGT_BKPNAME_EXP
-# $CMD_SSL des3 -salt -k $BKP_EXPPWD -in $ST_FULL$TGT_BKPNAME_EXP -out $ST_FULL$TGT_BKPNAME_EXP".des3"
-
  sleep $IDL && $SSH_STR export > $EXP_TMP_FILE
  $CMD_SSL des3 -salt -k $BKP_EXPPWD -in $EXP_TMP_FILE -out $ST_FULL$TGT_BKPNAME_EXP".des3"
  $CMD_RM $EXP_TMP_FILE
 
-# $CMD_RM $ST_FULL$TGT_BKPNAME_EXP
 }
 
 function fn_backup_retention {
-# Function for rotate old backups
+# Function for rotating old backups
 
 $CMD_FIND $ST_FULL -mtime +$ST_RTN -type f -exec $CMD_MV {} $ST_ARCH \;
 $CMD_FIND $ST_ARCH -type f -exec $CMD_GZ {} \;
