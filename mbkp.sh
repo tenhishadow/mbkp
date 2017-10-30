@@ -75,7 +75,7 @@ function fn_check_log {
 # author: Tenhi(adm@tenhi.ru)
 ################################################
 
-" > $$LOG
+" > $LOG
  fi
 }
 function fn_check_readme {
