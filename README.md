@@ -8,12 +8,12 @@ Each device has its own configuration file in which it can override the standard
 # Scheduling
 Here is crontab example:
 ```
-# Config:
+# VARS:
 MCFG="/etc/mikrotik_backup"
 MBKP="/usr/local/bin/mbkp"
 MLOG="/var/log/mikrotik_backup/log"
-# Tasks:
-00 03 * * *     $MBKP $MCFG"/somehost.cfg" >>$MLOG 2>>$MLOG             # Main mikrotik in DC
+# TASKS:
+00 03 * * *     $MBKP $MCFG"/somehost.cfg" >>$MLOG 2>>$MLOG             # Comment
 ```
 
 # Recommended paths:

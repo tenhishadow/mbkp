@@ -7,14 +7,15 @@
 # author Tenhi
 
 # Initial checks
+# Config file should be provided and should be readable
 [[ -z "$1" ]] && echo "ERR: no config file provided" && exit 1
 ! [[ -r "$1" ]] && echo "ERR: cannot  read $1" && exit 1
 
 # Default variables ( may be overrided in custom config )
 #### Connection ####################################
 TGT_PORT="22"                                           # default ssh-port
-TGT_USER="rbkp02"                                       # Default backup user
-IDL="3s"                                                # Default idle time
+TGT_USER="bkpuser"                                      # Default backup user
+IDL="5s"                                                # Default idle time
 #### Backup variables ##############################
 BKP_BINPWD="NvLB37zchdor9Y4E8KSpxibWHATfjstnw"          # Default password for binary backup    33cr
 BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for export          33cr
@@ -61,7 +62,6 @@ SCP_STR="$CMD_SCP -2 -4 -B $SSH_OPT -P $TGT_PORT $TGT_USER@$TGT_IP:/$TGT_BKPNAME
 
 function fn_check_log {
 # Function for checking need of creating logfile
-# Changed 20170901
 
  if [[ -r $LOG ]]
   then
@@ -72,7 +72,7 @@ function fn_check_log {
 # Logfile for mikrotik backups
 # The format is:
 #       DATE;STATE;FILENAME
-# author: adm@tenhi.ru
+# author: Tenhi(adm@tenhi.ru)
 ################################################
 
 " > $$LOG
@@ -80,7 +80,6 @@ function fn_check_log {
 }
 function fn_check_readme {
 # Function for checking need of creating readme
-# Changed 20170901
 
 README=$ST_ROOT"/README.txt"      # README File
 
@@ -93,7 +92,7 @@ README=$ST_ROOT"/README.txt"      # README File
 # Here you can find backups for all Mikrotiks
 # Files located in:
 #       hostname/...
-# Archived(older 30 days) backups are in:
+# Archived backups are in:
 #       hostname/archive/...
 # You can get backup info for all jobs in LOG.txt
 # ===
@@ -102,7 +101,6 @@ README=$ST_ROOT"/README.txt"      # README File
 }
 function fn_check_directory {
 # Function for checking||creating full-path dirs
-# Changed 20170901
 
  if [[ -d $ST_FULL"archive" && -r $ST_FULL"archive" ]]
   then
@@ -116,17 +114,14 @@ function fn_check_directory {
 
 function fn_mikrotik_cleanup {
 # Function for cleaning up target mikrotik
-# Changed 20170901
 
 $SSH_STR "ip dns cache flush"
 $SSH_STR "console clear-history"
 }
 function fn_mikrotik_fixtime {
 # Function for setting ntp client
-# Changed 20170901
 
-$SSH_STR "ip cloud set update-time=no"
-$SSH_STR "system ntp client set primary-ntp=0.0.0.0 secondary-ntp=0.0.0.0 enabled=yes server-dns-names=pool.ntp.org"
+$SSH_STR "ip cloud set update-time=no; system ntp client set primary-ntp=0.0.0.0 secondary-ntp=0.0.0.0 enabled=yes server-dns-names=pool.ntp.org"
 }
 
 function fn_backup_binary {
@@ -142,7 +137,6 @@ function fn_backup_binary {
 }
 function fn_backup_export {
  # Function for saving exported config
- # Changed 20170901
 
  # NOTE: decrypt the file
  # openssl des3 -d -salt -in encryptedfile.txt -out normalfile.txt
@@ -160,7 +154,6 @@ function fn_backup_export {
 
 function fn_backup_retention {
 # Function for rotate old backups
-# Changed 20170901
 
 $CMD_FIND $ST_FULL -mtime +$ST_RTN -type f -exec $CMD_MV {} $ST_ARCH \;
 $CMD_FIND $ST_ARCH -type f -exec $CMD_GZ {} \;
