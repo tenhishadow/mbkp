@@ -162,11 +162,11 @@ function fn_log {
    echo $CMD_DATE";fail;"$TGT_BKPNAME_BIN >> $LOG
  fi
 
- if [[ -r $ST_FULL$TGT_BKPNAME_EXP ]]
+ if [[ -r $ST_FULL$TGT_BKPNAME_EXP".des3" ]]
   then
-   echo $CMD_DATE";okay;"$TGT_BKPNAME_EXP >> $LOG
+   echo $CMD_DATE";okay;"$TGT_BKPNAME_EXP".des3" >> $LOG
   else
-   echo $CMD_DATE";fail;"$TGT_BKPNAME_EXP >> $LOG
+   echo $CMD_DATE";fail;"$TGT_BKPNAME_EXP".des3" >> $LOG
  fi
 
 }
