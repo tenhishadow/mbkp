@@ -152,6 +152,24 @@ $CMD_FIND $ST_FULL -mtime +$ST_RTN -type f -exec $CMD_MV {} $ST_ARCH \;
 $CMD_FIND $ST_ARCH -type f -exec $CMD_GZ {} \;
 }
 
+function fn_log {
+# Function for recording results to logfile
+
+ if [[ -r $ST_FULL$TGT_BKPNAME_BIN ]]
+  then
+   echo $CMD_DATE";okay;"$TGT_BKPNAME_BIN >> $LOG
+  else
+   echo $CMD_DATE";fail;"$TGT_BKPNAME_BIN >> $LOG
+ fi
+
+ if [[ -r $ST_FULL$TGT_BKPNAME_EXP ]]
+  then
+   echo $CMD_DATE";okay;"$TGT_BKPNAME_EXP >> $LOG
+  else
+   echo $CMD_DATE";fail;"$TGT_BKPNAME_EXP >> $LOG
+ fi
+
+}
 
 ##
 # Start Execution
@@ -170,4 +188,4 @@ sleep $IDL && fn_backup_binary           # save binary backup
 sleep $IDL && fn_backup_export           # save exported config
 sleep $IDL && fn_mikrotik_fixtime
 sleep $IDL && fn_mikrotik_cleanup        # Clean it again to hide commands
-#fn_log                                  # Recording backup results to db # TBD
+fn_log                                   # Recording backup results to file
