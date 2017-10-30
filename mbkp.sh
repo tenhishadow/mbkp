@@ -1,6 +1,8 @@
 #!/bin/bash
+
 # 20171016
 # mikrotik-backup script
+
 # version 1.2
 # author Tenhi
 
@@ -22,12 +24,10 @@ ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
 #### Logging #######################################
 LOG=$ST_ROOT/"LOG.txt"                                  # Default log-file location
 
-
 #######################################################################################################################
 # Importing target config where you can override options
 source $1
 #######################################################################################################################
-
 
 # Functions
 #### Utils #############################################################################################
