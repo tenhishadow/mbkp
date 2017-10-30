@@ -182,7 +182,7 @@ fn_check_readme                         # Checking need of creating readme
 
 fn_backup_retention                     # Handling old backups
 fn_mikrotik_cleanup                     # Initial cleanup
-[[ $? -ne 0 ]] && echo "ERR: cannot establish ssh-connection" && exit 1
+[[ $? -ne 0 ]] && fn_log && echo "ERR: cannot establish ssh-connection" && exit 1
 
 sleep $IDL && fn_backup_binary           # save binary backup
 sleep $IDL && fn_backup_export           # save exported config
