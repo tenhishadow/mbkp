@@ -19,6 +19,8 @@ BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for 
 ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
+SC_USER="root"		# default user for using script(need to chown dir)
+SC_GROUP="root"		# default group
 
 #######################################################################################################################
 # Importing target config where you can override options
@@ -104,7 +106,7 @@ function fn_check_directory {
    return 0
   else
    $CMD_MKD $ST_FULL"archive"
-   $CMD_CHO root:root $ST_FULL
+   $CMD_CHO $SC_USER:$SC_GROUP $ST_FULL
    $CMD_CHM 755 $ST_FULL
  fi
 }
