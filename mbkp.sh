@@ -120,7 +120,7 @@ $SSH_STR "console clear-history"
 function fn_mikrotik_fixtime {
 # Function for setting ntp client
 
-$SSH_STR "ip cloud set update-time=no; system ntp client set primary-ntp=0.0.0.0 secondary-ntp=0.0.0.0 enabled=yes server-dns-names=pool.ntp.org"
+$SSH_STR "ip cloud set update-time=no; system ntp client set primary-ntp=200.160.0.8 secondary-ntp=200.189.40.8 enabled=yes server-dns-names=pool.ntp.org"
 }
 
 function fn_backup_binary {
