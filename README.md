@@ -4,6 +4,9 @@ Mikrotik backup script
 This script can be used to centralize the backup configurations of Mikrotics devices.
 Each device has its own configuration file in which it can override the standard options.
 
+# А теперь по-русски:
+https://habr.com/post/342060/
+
 
 # Scheduling
 Here is crontab example:
