@@ -1,7 +1,7 @@
 # mbkp
 Mikrotik backup script
 
-This script can be used to centralize the backup configurations of Mikrotics devices.
+This script can be used to centralize the backup configurations of Mikrotik devices.
 Each device has its own configuration file in which it can override the standard options.
 
 # А теперь по-русски:
