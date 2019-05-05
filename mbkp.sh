@@ -129,7 +129,9 @@ function fn_backup_binary {
  T_BKPSTR="system backup save name=$TGT_BKPNAME_BIN dont-encrypt=no password=$BKP_BINPWD"
  T_BKPCLN="file remove [find name=$TGT_BKPNAME_BIN]"
 
- $SSH_STR $T_BKPSTR                      # Initializing backup
+
+ # Put output result exec mikrotik command to /dev/null
+ $SSH_STR $T_BKPSTR > /dev/null          # Initializing backup
 
  sleep $IDL && $SCP_STR                  # Copy file to storage
  sleep $IDL && $SSH_STR $T_BKPCLN        # Remove created file on mikrotik
@@ -150,8 +152,10 @@ function fn_backup_export {
 function fn_backup_retention {
 # Function for rotating old backups
 
-$CMD_FIND $ST_FULL -mtime +$ST_RTN -type f -exec $CMD_MV {} $ST_ARCH \;
-$CMD_FIND $ST_ARCH -type f -exec $CMD_GZ {} \;
+ # Search old backups only one directory, not tree
+  $CMD_FIND $ST_FULL -maxdepth 1 -mtime +$ST_RTN -type f -exec $CMD_MV {} $ST_ARCH \;
+ # Add into archive only not gz files
+  $CMD_FIND $ST_ARCH -not -name "*.gz" -type f -exec $CMD_GZ {} \;
 }
 
 function fn_log {
