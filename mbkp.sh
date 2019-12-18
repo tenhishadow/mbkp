@@ -14,6 +14,7 @@ ST_RTN="30"                                             # Default retention time
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
 SC_USER=$(whoami)                                       # default user for using script(need to chown dir)
 SC_GROUP=$(whoami)                                      # default group
+ST_MODE="755"
 
 #######################################################################################################################
 # import config
@@ -84,9 +85,25 @@ function fn_check_directory {
 # Function for checking||creating full-path dirs
   if [[ ( ! -d "${ST_FULL}archive" ) || ( ! -r "${ST_FULL}archive" ) ]]
   then
-    ${CMD_MKD} "${ST_FULL}archive"
-    ${CMD_CHO} "${SC_USER}":"${SC_GROUP}" "${ST_FULL}"
-    ${CMD_CHM} 755 "${ST_FULL}"
+    # create dirs
+    if ! ${CMD_MKD} "${ST_FULL}archive"
+    then
+      printf '%s\n' "ERR: cannot create dir ${ST_FULL}archive"
+      exit 1
+    fi
+
+    # chown it
+    if ! ${CMD_CHO} "${SC_USER}":"${SC_GROUP}" "${ST_FULL}"
+    then
+      printf '%s\n' "cannot chown ${ST_FULL} to ${SC_USER}:${SC_GROUP}"
+      exit 1
+    fi
+    # chmod
+    if ! ${CMD_CHM} ${ST_MODE} "${ST_FULL}"
+    then
+      printf '%s\n' "ERR: cannot chmod ${ST_MODE} for ${ST_FULL}"
+      exit 1
+    fi
   fi
 }
 
