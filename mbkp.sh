@@ -24,7 +24,9 @@ SC_GROUP="root"		# default group
 
 #######################################################################################################################
 # Importing target config where you can override options
+# shellcheck source=example.cfg
 source "${1}"
+
 #######################################################################################################################
 
 # Functions
@@ -186,8 +188,13 @@ fn_check_log                            # Checking need of creating log-file
 fn_check_readme                         # Checking need of creating readme
 
 fn_backup_retention                     # Handling old backups
-fn_mikrotik_cleanup                     # Initial cleanup
-[[ $? -ne 0 ]] && fn_log && echo "ERR: cannot establish ssh-connection" && exit 1
+# Initial cleanup
+if ! fn_mikrotik_cleanup
+then
+  fn_log
+  echo "ERR: cannot establish ssh-connection"
+  exit 1
+fi
 
 sleep ${IDL} && fn_backup_binary        # save binary backup
 sleep ${IDL} && fn_backup_export        # save exported config
