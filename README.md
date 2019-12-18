@@ -1,6 +1,9 @@
 # mbkp
 Mikrotik backup script
 
+![GitHub](https://img.shields.io/github/license/tenhishadow/mbkp?style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tenhishadow/mbkp/shellcheck)
+
 This script can be used to centralize the backup configurations of Mikrotik devices.
 Each device has its own configuration file in which it can override the standard options.
 
