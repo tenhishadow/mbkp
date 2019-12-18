@@ -14,8 +14,8 @@ BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for 
 ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
-SC_USER="root"		# default user for using script(need to chown dir)
-SC_GROUP="root"		# default group
+SC_USER="root"                                          # default user for using script(need to chown dir)
+SC_GROUP="root"                                         # default group
 
 #######################################################################################################################
 # import config
@@ -48,16 +48,8 @@ ST_ARCH="${ST_FULL}archive/"              # full path to archive (/root_storage/
 TGT_BKPNAME_BIN="${ST_HOSTNAME}_${CMD_DATE}.backup"
 TGT_BKPNAME_EXP="${ST_HOSTNAME}_${CMD_DATE}.export"
 
-SSH_OPT=" -o ConnectionAttempts=5 \
-  -o ConnectTimeout=5s \
-  -o PasswordAuthentication=no \
-  -o PreferredAuthentications=publickey \
-  -o StrictHostKeyChecking=no \
-  -o UserKnownHostsFile=/dev/null \
-  -o GlobalKnownHostsFile=/dev/null \
-  -o CheckHostIP=no "
-SSH_STR="${CMD_SSH} -2 -4 -p ${TGT_PORT} -l $TGT_USER ${TGT_IP} ${SSH_OPT}"
-SCP_STR="${CMD_SCP} -2 -4 -B ${SSH_OPT} -P ${TGT_PORT} $TGT_USER@${TGT_IP}:/${TGT_BKPNAME_BIN} ${ST_FULL}"
+SSH_STR="${CMD_SSH} -p ${TGT_PORT} -l $TGT_USER ${TGT_IP}"
+SCP_STR="${CMD_SCP} -B -P ${TGT_PORT} $TGT_USER@${TGT_IP}:/${TGT_BKPNAME_BIN} ${ST_FULL}"
 
 #### Defining functions ################################################################################
 
