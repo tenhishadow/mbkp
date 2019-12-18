@@ -5,8 +5,6 @@
 
 # Default variables ( may be overrided in custom config )
 #### Connection ####################################
-TGT_PORT="22"                                           # default ssh-port
-TGT_USER="bkpuser"                                      # Default backup user
 IDL="5s"                                                # Default idle time
 #### Backup variables ##############################
 BKP_BINPWD="NvLB37zchdor9Y4E8KSpxibWHATfjstnw"          # Default password for binary backup    33cr
@@ -14,15 +12,15 @@ BKP_EXPPWD="hGAEJKptcCznB2v8RaHkoxiSTYNFZ3suW"          # Default password  for 
 ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
-SC_USER="root"                                          # default user for using script(need to chown dir)
-SC_GROUP="root"                                         # default group
+SC_USER=$(whoami)                                       # default user for using script(need to chown dir)
+SC_GROUP=$(whoami)                                      # default group
 
 #######################################################################################################################
 # import config
 ## check if it's avaliable
 if [[ ( -z ${1} ) || ( ! -r ${1} ) ]]
 then
-  printf '%s\n' "ERR: cannot  read ${1}"
+  printf '%s\n' "ERR: cannot  read config file"
   exit 1
 fi
 # shellcheck source=example.cfg
@@ -43,13 +41,10 @@ CMD_SSL=$(command -v openssl)
 CMD_SSH=$(command -v ssh)
 CMD_SCP=$(command -v scp)
 
-ST_FULL="${ST_ROOT}/${ST_HOSTNAME}/"      # full path to .backup (/root_storage/hostname/)
+ST_FULL="${ST_ROOT}/${TGT_HOSTNAME}/"      # full path to .backup (/root_storage/hostname/)
 ST_ARCH="${ST_FULL}archive/"              # full path to archive (/root_storage/hostname/archive)
-TGT_BKPNAME_BIN="${ST_HOSTNAME}_${CMD_DATE}.backup"
-TGT_BKPNAME_EXP="${ST_HOSTNAME}_${CMD_DATE}.export"
-
-SSH_STR="${CMD_SSH} -p ${TGT_PORT} -l $TGT_USER ${TGT_IP}"
-SCP_STR="${CMD_SCP} -B -P ${TGT_PORT} $TGT_USER@${TGT_IP}:/${TGT_BKPNAME_BIN} ${ST_FULL}"
+TGT_BKPNAME_BIN="${TGT_HOSTNAME}_${CMD_DATE}.backup"
+TGT_BKPNAME_EXP="${TGT_HOSTNAME}_${CMD_DATE}.export"
 
 #### Defining functions ################################################################################
 
@@ -90,15 +85,15 @@ function fn_check_directory {
   if [[ ( ! -d "${ST_FULL}archive" ) || ( ! -r "${ST_FULL}archive" ) ]]
   then
     ${CMD_MKD} "${ST_FULL}archive"
-    ${CMD_CHO} ${SC_USER}:${SC_GROUP} "${ST_FULL}"
+    ${CMD_CHO} "${SC_USER}":"${SC_GROUP}" "${ST_FULL}"
     ${CMD_CHM} 755 "${ST_FULL}"
   fi
 }
 
 function fn_mikrotik_cleanup {
 # Function for cleaning up target mikrotik
-  ${SSH_STR} "ip dns cache flush"
-  ${SSH_STR} "console clear-history"
+  ${CMD_SSH} "${TGT_HOSTNAME}" "ip dns cache flush"
+  ${CMD_SSH} "${TGT_HOSTNAME}" "console clear-history"
 }
 
 function fn_backup_binary {
@@ -107,17 +102,17 @@ function fn_backup_binary {
  T_BKPCLN="file remove [find name=${TGT_BKPNAME_BIN}]"
 
  # Put output result exec mikrotik command to /dev/null
- ${SSH_STR} "${T_BKPSTR}" > /dev/null        # Initializing backup
+ ${CMD_SSH} "${TGT_HOSTNAME}" "${T_BKPSTR}" > /dev/null        # Initializing backup
 
- sleep ${IDL} && ${SCP_STR}                  # Copy file to storage
- sleep ${IDL} && ${SSH_STR} "${T_BKPCLN}"    # Remove created file on mikrotik
+ sleep ${IDL} && ${CMD_SCP} "${TGT_HOSTNAME}":/"${TGT_BKPNAME_BIN}" "${ST_FULL}"  # Copy file to storage
+ sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" "${T_BKPCLN}"                       # Remove created file on mikrotik
 }
 
 function fn_backup_export {
  # Function for saving exported config
  EXP_TMP_FILE="/tmp/${RANDOM}.export"
 
- sleep ${IDL} && ${SSH_STR} export > ${EXP_TMP_FILE}
+ sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" export > ${EXP_TMP_FILE}
  ${CMD_SSL} des3 -salt \
    -k ${BKP_EXPPWD} \
    -in ${EXP_TMP_FILE} \
