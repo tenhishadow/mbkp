@@ -1,0 +1,31 @@
+---
+
+name: shellcheck
+
+on:
+  pull_request
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: do checkout
+        uses: actions/checkout@master
+
+      - name: install shellcheck
+        run: >-
+          sudo apt install
+          shellcheck
+
+      - name: check script
+        run: >-
+          shellcheck
+          --shell=bash
+          --external-sources
+          --color=always
+          mbkp.sh
+
+...
