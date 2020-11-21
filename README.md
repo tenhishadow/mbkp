@@ -15,6 +15,7 @@ https://habr.com/post/342060/
 2. Configure your devices using ssh_config files ( read ```man ssh_config``` )
 ### example config for host( for those who don't want to read documentation )
 ```bash
+# file ~/.ssh/config
 # gw jump
 host mikrotik1
   User backup_user
