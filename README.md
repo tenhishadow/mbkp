@@ -7,11 +7,33 @@ Mikrotik backup script
 This script can be used to centralize the backup configurations of Mikrotik devices.
 Each device has its own configuration file in which it can override the standard options.
 
-# А теперь по-русски:
+## А теперь по-русски:
 https://habr.com/post/342060/
 
+## Configuration
+1. Read ```example.cfg```
+2. Configure your devices using ssh_config files ( read ```man ssh_config``` )
+### example config for host( for those who don't want to read documentation )
+```bash
+# gw jump
+host mikrotik1
+  User backup_user
+  Hostname 1.1.1.1
+  IdentityFile ~/.ssh/mykey
 
-# Scheduling
+# ap
+host mikrotik-ap1
+  User backup_user
+  Hostname 192.168.88.2
+  ProxyJump mikrotik1 # use gw as an entrypoint
+  IdentityFile ~/.ssh/mykey
+```
+To make ProxyJump work you need to allow ssh forwarding on your mikrotik device via
+```
+> /ip ssh set forwarding-enabled=both
+```
+
+## Scheduling
 Here is crontab example:
 ```
 # VARS:
@@ -22,7 +44,7 @@ MLOG="/var/log/mikrotik_backup/log"
 00 03 * * *     $MBKP $MCFG"/somehost.cfg" >>$MLOG 2>>$MLOG             # Comment
 ```
 
-# Recommended paths:
+## Recommended paths:
 
 - /etc/mikrotik_backup		directory where configuration files located
 
