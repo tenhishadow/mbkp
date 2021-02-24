@@ -16,18 +16,27 @@ https://habr.com/post/342060/
 ### example config for host( for those who don't want to read documentation )
 ```bash
 # file ~/.ssh/config
+host *
+  ControlMaster          auto # use just one connection for script
+  ControlPath            ~/.ssh/control-%h-%p-%r
+  ControlPersist         5m
+  ForwardX11             no # disable useless
+  IdentityFile           ~/.ssh/id_rsa # define default key if needed
+  PasswordAuthentication no # disable useless
+  Port                   22 # default port
+  StrictHostKeyChecking  no # dont check hostkey
+  User                   backupusr # default backup user
+
 # gw jump
 host mikrotik1
-  User backup_user
   Hostname 1.1.1.1
-  IdentityFile ~/.ssh/mykey
 
 # ap
 host mikrotik-ap1
-  User backup_user
   Hostname 192.168.88.2
   ProxyJump mikrotik1 # use gw as an entrypoint
-  IdentityFile ~/.ssh/mykey
+  IdentityFile ~/.ssh/mykey # override if needed
+  User xxx # override if needed
 ```
 To make ProxyJump work you need to allow ssh forwarding on your mikrotik device via
 ```
