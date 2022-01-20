@@ -1,0 +1,44 @@
+ system resource print
+                   uptime: 2w1d11h42m30s
+                  version: 6.48.6 (long-term)
+               build-time: Dec/03/2021 12:15:05
+         factory-software: 6.38.2
+              free-memory: 486.4MiB
+             total-memory: 512.0MiB
+                      cpu: ARMv7
+                cpu-count: 1
+            cpu-frequency: 800MHz
+                 cpu-load: 1%
+           free-hdd-space: 2188.0KiB
+          total-hdd-space: 16.0MiB
+  write-sect-since-reboot: 9272
+         write-sect-total: 15146
+               bad-blocks: 0%
+        architecture-name: arm
+               board-name: CRS326-24G-2S+
+                 platform: MikroTik
+system/resource/print
+                   uptime: 4d18h51m45s
+                  version: 7.1.1 (stable)
+               build-time: Dec/21/2021 11:53:05
+         factory-software: 6.42.3
+              free-memory: 41.5MiB
+             total-memory: 128.0MiB
+                      cpu: ARMv7
+                cpu-count: 4
+            cpu-frequency: 896MHz
+                 cpu-load: 16%
+           free-hdd-space: 1252.0KiB
+          total-hdd-space: 15.2MiB
+  write-sect-since-reboot: 23658
+         write-sect-total: 1416829
+               bad-blocks: 0%
+        architecture-name: arm
+               board-name: hAP ac^2
+                 platform: MikroTik
+
+
+# more examples
+version:8.1.1-lalsdkasjdkhsakj--as-d-sad
+version: 9.1-asdsadsa-#EASD
+version: 10
