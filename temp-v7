@@ -1,0 +1,19 @@
+system/resource/print
+                   uptime: 4d18h51m45s
+                  version: 7.1.1 (stable)
+               build-time: Dec/21/2021 11:53:05
+         factory-software: 6.42.3
+              free-memory: 41.5MiB
+             total-memory: 128.0MiB
+                      cpu: ARMv7
+                cpu-count: 4
+            cpu-frequency: 896MHz
+                 cpu-load: 16%
+           free-hdd-space: 1252.0KiB
+          total-hdd-space: 15.2MiB
+  write-sect-since-reboot: 23658
+         write-sect-total: 1416829
+               bad-blocks: 0%
+        architecture-name: arm
+               board-name: hAP ac^2
+                 platform: MikroTik
