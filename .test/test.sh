@@ -43,7 +43,7 @@ ssh chr_test \
 
 ## temp
 ssh chr_test \
-  "export show-sensitive"
+  "export"
 
 # check that we run the same we launch(ну нет уже веры никому)
 version_running=$(ssh \
