@@ -40,7 +40,7 @@ fi
 
 # prep ssh for a test
 if [[ -d ~/.ssh ]]; then
-  return
+  echo ok
 else
   mkdir ~/.ssh
   chmod 0700 ~/.ssh
