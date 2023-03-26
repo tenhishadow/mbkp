@@ -10,8 +10,7 @@ function fn_get_running_version {
   ssh -F .test/.ssh_config chr_test \
     "system resource print" \
     | awk -F ':' \
-    '/version/ {sub(/^ */, "", $2); print $2}' \
-    | awk '{print $1}'
+      '/version/ {sub(/^ */, "", $2); split($2, a, " "); print a[1]}'
 }
 
 # deps | get chr disk image
@@ -39,6 +38,6 @@ version_running=$(fn_get_running_version)
 echo "DBG: version running $version_running"
 echo "DBG: version expected $1"
 
-[[ $1 != "$version_running" ]] && \
+[[ "$1" != "$version_running" ]] && \
   echo "something wrong in test" && \
   exit 1
