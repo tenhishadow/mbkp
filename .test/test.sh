@@ -39,5 +39,4 @@ else
 fi
 
 # do backup
-ls -lR ~/
 bash -x mbkp.sh .test/test.cfg
