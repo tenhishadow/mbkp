@@ -29,4 +29,10 @@ jobs:
       - name: test | chr ${{ matrix.chr }}
         run: bash -x .test/test.sh "${{ matrix.chr }}"
 
+      - name: artifacts | save
+        uses: actions/upload-artifact@v2
+        with:
+          name: backups-${{ matrix.chr }}
+          path: 29e7738e-6f65-4991-998c-be1cc916803f/
+
 ...
