@@ -26,33 +26,7 @@ jobs:
           sudo apt-get update
           sudo apt-get -yq install qemu-system-x86 wget
 
-      - name: deps | get chr ${{ matrix.chr }}
-        run: >-
-          wget -qO-
-          https://download.mikrotik.com/routeros/${{ matrix.chr }}/chr-${{ matrix.chr }}.img.zip
-          | zcat
-          > chr-${{ matrix.chr }}.img
-
-      - name: run chr-${{ matrix.chr }}
-        run: >-
-          qemu-system-x86_64
-          -daemonize
-          -display none
-          -m 256
-          -net nic,model=virtio
-          -net user,hostfwd=tcp::2345-:22
-          -drive file=chr-${{ matrix.chr }}.img,format=raw,if=ide
-
-      - name: check chr ${{ matrix.chr }} is up and running
-        run: >-
-          ssh -F .test/.ssh_config chr_test
-          system resource print
-
-          # ssh
-          # 127.0.0.1
-          # -p 2345
-          # -l admin
-          # -o StrictHostKeyChecking=no
-          # -o UserKnownHostsFile=/dev/null
+      - name: test | chr ${{ matrix.chr }}
+        run: bash -x ./test/test.sh "${{ matrix.chr }}"
 
 ...
