@@ -85,8 +85,13 @@ else
   exit 1
 fi
 
-
 # check decrypt process
+openssl \
+  des3 \
+  -d \
+  -salt \
+  -in "${ST_ROOT}/${TGT_HOSTNAME}/*.export.des3" \
+  -out "${ST_ROOT}/${TGT_HOSTNAME}/*.export"
 
 # check expected test-values in export
 
