@@ -43,13 +43,13 @@ jobs:
 
       - name: check
         run: >-
-          ssh
-            127.0.0.1
-            -p 2345
-            -l admin
-            -o StrictHostKeyChecking=no
-            -o UserKnownHostsFile=/dev/null
-            'system resource print'
+          ssh -vvvv
+          127.0.0.1
+          -p 2345
+          -l admin
+          -o StrictHostKeyChecking=no
+          -o UserKnownHostsFile=/dev/null
+          system resource print
 
 
 
