@@ -34,6 +34,9 @@ version_running=$(ssh \
 echo "DBG: version running $version_running"
 echo "DBG: version expected $1"
 
-[[ "$1" != "$version_running" ]] \
-  && echo "something wrong in test" \
-  && exit 1
+if [[ "$1" != "$version_running" ]]; then
+  echo "something wrong in test"
+  exit 1
+else
+  echo "Versions are the same."
+fi
