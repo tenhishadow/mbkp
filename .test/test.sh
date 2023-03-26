@@ -77,7 +77,7 @@ if [[ -r $LOG ]]; then
     echo "test: 'fail' record found in log file"
     exit 1
   else
-    [[ $( grep "okay" $LOG  | wc -l ) == "2" ]] \
+    [[ $( grep -c "okay" $LOG ) == "2" ]] \
       && echo "test: both backups are okay in $LOG"
   fi
 else
@@ -93,10 +93,6 @@ fi
 # [[ -r 29e7738e-6f65-4991-998c-be1cc916803f/chr_test/chr_test_20230326_2043.backup ]]
 # [[ -r 29e7738e-6f65-4991-998c-be1cc916803f/chr_test/chr_test_20230326_2043.export.des3 ]]
 
-# shellcheck disable=SC2034
 # TGT_HOSTNAME="chr_test"
-# IDL="1s"
 # BKP_BINPWD="YUUM3y7th2fAfCumiArzrJrKETU5nMQLNjAbrKZbVsDodbkhfqJit39udRd94pRhR"
 # BKP_EXPPWD="rHap3Ahj99s44L2NFeZjZexAawLhhmF4MeNYe97dk5xAoPoMXeU3av9jqztpDZUKD"
-# ST_ROOT="29e7738e-6f65-4991-998c-be1cc916803f"
-# LOG default location
