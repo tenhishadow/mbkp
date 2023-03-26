@@ -13,7 +13,6 @@ ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
 SC_USER=$(whoami)                                       # default user for using script(need to chown dir)
-SC_GROUP=$(whoami)                                      # default group
 ST_MODE="755"
 
 #######################################################################################################################
@@ -93,9 +92,9 @@ function fn_check_directory {
     fi
 
     # chown it
-    if ! ${CMD_CHO} "${SC_USER}":"${SC_GROUP}" "${ST_FULL}"
+    if ! ${CMD_CHO} "${SC_USER}" "${ST_FULL}"
     then
-      printf '%s\n' "cannot chown ${ST_FULL} to ${SC_USER}:${SC_GROUP}"
+      printf '%s\n' "cannot chown ${ST_FULL} to ${SC_USER}"
       exit 1
     fi
     # chmod
@@ -129,7 +128,27 @@ function fn_backup_export {
  # Function for saving exported config
  EXP_TMP_FILE="/tmp/${RANDOM}.export"
 
- sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" export > ${EXP_TMP_FILE}
+ # define export command depends on ros version
+ _ros_version=$( sleep ${IDL} \
+   && ${CMD_SSH} "${TGT_HOSTNAME}" \
+     "system resource print" \
+     | awk \
+     -F ':' \
+     '/version/ {sub(/^ */, "", $2); split($2, a, " "); split(a[1], b, "."); print b[1]}')
+ case $_ros_version in
+  "6")
+   _export_command="export"
+   ;;
+  "7")
+   _export_command="export show-sensitive"
+   ;;
+  "*")
+   echo "non-supported version"
+   exit 1
+   ;;
+ esac
+
+ sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" "${_export_command}" > ${EXP_TMP_FILE}
  ${CMD_SSL} des3 -salt \
    -k ${BKP_EXPPWD} \
    -in ${EXP_TMP_FILE} \

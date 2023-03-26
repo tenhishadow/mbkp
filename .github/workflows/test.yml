@@ -1,0 +1,38 @@
+---
+
+name: test
+
+on:
+  pull_request
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chr:
+          - '6.48.6'
+          - '7.8'
+    steps:
+
+      - name: do checkout
+        uses: actions/checkout@master
+
+      - name: deps | install
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update
+          sudo apt-get -yq install qemu-system-x86 wget
+
+      - name: test | chr ${{ matrix.chr }}
+        run: bash -x .test/test.sh "${{ matrix.chr }}"
+
+      - name: artifacts | save
+        uses: actions/upload-artifact@v2
+        with:
+          name: backups-${{ matrix.chr }}
+          path: 29e7738e-6f65-4991-998c-be1cc916803f/
+
+...
