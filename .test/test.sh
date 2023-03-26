@@ -36,6 +36,7 @@ ssh chr_test \
 # establish test values for backup to verify their existence following the backup process
 TEST_VALUE_NSENSITIVE="Kn4kk3ed5D4FuD3s7VeMmeecHMDhwgFaci54t7ETnFtARkQsi"
 TEST_VALUE_SENSITIVE="oobddvSAqPtDNagrjdPEkK4vxfox7euM2kXRtaJFqZjQZ5T77"
+
 ## non-sensitive
 # shellcheck disable=SC2029
 ssh chr_test \
@@ -45,10 +46,6 @@ ssh chr_test \
 ssh chr_test \
   "ppp secret add name=test-backup-value password=$TEST_VALUE_SENSITIVE"
 
-## temp
-echo "CHECKIT"
-ssh chr_test \
-  "export" | grep --quiet $TEST_VALUE_NSENSITIVE
 
 # check that we run the same we launch(ну нет уже веры никому)
 version_running=$(ssh \
@@ -87,19 +84,32 @@ fi
 
 # check decrypt process
 _encrypted_backup=$(find "${ST_ROOT}/${TGT_HOSTNAME}" -type f -name '*.export.des3')
+_decrypted_backup="${ST_ROOT}/${TGT_HOSTNAME}/backup.decrypted"
 openssl \
   des3 \
   -d \
   -salt \
   -k "${BKP_EXPPWD}" \
   -in "$_encrypted_backup" \
-  -out "${ST_ROOT}/${TGT_HOSTNAME}/.decrypted"
+  -out "$_decrypted_backup"
 
 # check expected test-values in export
-
-# [[ -r 29e7738e-6f65-4991-998c-be1cc916803f/chr_test/chr_test_20230326_2043.backup ]]
-# [[ -r 29e7738e-6f65-4991-998c-be1cc916803f/chr_test/chr_test_20230326_2043.export.des3 ]]
-
-# TGT_HOSTNAME="chr_test"
-# BKP_BINPWD="YUUM3y7th2fAfCumiArzrJrKETU5nMQLNjAbrKZbVsDodbkhfqJit39udRd94pRhR"
-# BKP_EXPPWD="rHap3Ahj99s44L2NFeZjZexAawLhhmF4MeNYe97dk5xAoPoMXeU3av9jqztpDZUKD"
+if [[ -r "$_decrypted_backup" ]]; then
+  # test non-sensitive
+  if grep "$TEST_VALUE_NSENSITIVE" $_decrypted_backup; then
+    echo "test: $TEST_VALUE_NSENSITIVE found in $_decrypted_backup"
+  else
+    echo "test: $TEST_VALUE_NSENSITIVE is not found in $_decrypted_backup"
+    exit 1
+  fi
+  # test sensitive
+  if grep "$TEST_VALUE_SENSITIVE" $_decrypted_backup; then
+    echo "test: $TEST_VALUE_SENSITIVE found in $_decrypted_backup"
+  else
+    echo "test: $TEST_VALUE_SENSITIVE is not found in $_decrypted_backup"
+    exit 1
+  fi
+else
+  echo "test: decrypted file is not readable"
+  exit 1
+fi
