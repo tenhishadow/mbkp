@@ -5,6 +5,15 @@ set -o noclobber
 set -o errexit
 set -o pipefail
 
+# function for getting version running
+function fn_get_running_version {
+  ssh -F .test/.ssh_config chr_test \
+    "system resource print" \
+    | awk -F ':' \
+    '/version/ {sub(/^ */, "", $2); print $2}' \
+    | awk '{print $1}'
+}
+
 # deps | get chr disk image
 wget -qO- \
   "https://download.mikrotik.com/routeros/${1}/chr-${1}.img.zip" \
@@ -25,12 +34,7 @@ ssh -F .test/.ssh_config chr_test \
   "system resource print"
 
 # check that we run the same we launch(ну нет уже веры никому)
-version_running=$(
-ssh -F .test/.ssh_config chr_test \
-  "system resource print" \
-  | awk -F ':' \
-  '/version/ {sub(/^ */, "", $2); print $2}' \
-  | awk '{print $1}' )
+version_running=$(fn_get_running_version)
 
 echo "DBG: version running $version_running"
 echo "DBG: version expected $1"
