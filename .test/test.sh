@@ -70,7 +70,7 @@ source .test/test.cfg
 
 # check backup log for any fail
 if [[ -r $LOG ]]; then
-  if grep -i 'fail' $LOG; then
+  if grep -i --color 'fail' $LOG; then
     echo "test: 'fail' record found in log file"
     exit 1
   else
@@ -96,14 +96,14 @@ openssl \
 # check expected test-values in export
 if [[ -r "$_decrypted_backup" ]]; then
   # test non-sensitive
-  if grep "$TEST_VALUE_NSENSITIVE" $_decrypted_backup; then
+  if grep --color "$TEST_VALUE_NSENSITIVE" $_decrypted_backup; then
     echo "test: $TEST_VALUE_NSENSITIVE found in $_decrypted_backup"
   else
     echo "test: $TEST_VALUE_NSENSITIVE is not found in $_decrypted_backup"
     exit 1
   fi
   # test sensitive
-  if grep "$TEST_VALUE_SENSITIVE" $_decrypted_backup; then
+  if grep --color "$TEST_VALUE_SENSITIVE" $_decrypted_backup; then
     echo "test: $TEST_VALUE_SENSITIVE found in $_decrypted_backup"
   else
     echo "test: $TEST_VALUE_SENSITIVE is not found in $_decrypted_backup"
