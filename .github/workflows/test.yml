@@ -30,20 +30,26 @@ jobs:
           https://download.mikrotik.com/routeros/${{ matrix.chr }}/chr-${{ matrix.chr }}.img.zip
           | zcat
           > chr-${{ matrix.chr }}.img
-#
-# qemu-system-x86_64 \
-#   -net nic,model=virtio \
-#   -net user,hostfwd=tcp::2227-:22 \
-#   -display none \
-#   -m 256 \
-#   -drive file=chr-${VERSION}.img,format=raw,if=ide \
-#   -daemonize
-#   # -hda chr-${VERSION}.img
-#
-# # detach???
-#
-# # after that just for login
-# #ssh 127.0.0.1 -p 2227 -l admin -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '/system/resource/print'
+
+      - name: run chr ${{ matrix.chr }}
+        run: >-
+          qemu-system-x86_64
+          -daemonize
+          -display none
+          -m 256
+          -net nic,model=virtio
+          -net user,hostfwd=tcp::2345-:22
+          -drive file=chr-${{ matrix.chr }}.img,format=raw,if=ide
+
+      - name: check
+        run: >-
+          ssh
+            127.0.0.1
+            -p 2345
+            -l admin
+            -o StrictHostKeyChecking=no
+            -o UserKnownHostsFile=/dev/null
+            'system resource print'
 
 
 
