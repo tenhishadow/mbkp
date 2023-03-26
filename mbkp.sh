@@ -13,7 +13,6 @@ ST_RTN="30"                                             # Default retention time
 #### Storage variables #############################
 ST_ROOT="/mnt/bkp_share/mikrotik"                       # Default storage root
 SC_USER=$(whoami)                                       # default user for using script(need to chown dir)
-SC_GROUP=$(whoami)                                      # default group
 ST_MODE="755"
 
 #######################################################################################################################
@@ -93,9 +92,9 @@ function fn_check_directory {
     fi
 
     # chown it
-    if ! ${CMD_CHO} "${SC_USER}":"${SC_GROUP}" "${ST_FULL}"
+    if ! ${CMD_CHO} "${SC_USER}" "${ST_FULL}"
     then
-      printf '%s\n' "cannot chown ${ST_FULL} to ${SC_USER}:${SC_GROUP}"
+      printf '%s\n' "cannot chown ${ST_FULL} to ${SC_USER}"
       exit 1
     fi
     # chmod
