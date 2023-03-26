@@ -20,9 +20,11 @@ jobs:
         uses: actions/checkout@master
 
       - name: deps | install
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt update
-          sudo apt install -y qemu-system-x86 wget
+          sudo apt-get update
+          sudo apt-get -yq install qemu-system-x86 wget
 
       - name: deps | get chr ${{ matrix.chr }}
         run: >-
@@ -31,7 +33,7 @@ jobs:
           | zcat
           > chr-${{ matrix.chr }}.img
 
-      - name: run chr ${{ matrix.chr }}
+      - name: run chr-${{ matrix.chr }}
         run: >-
           qemu-system-x86_64
           -daemonize
@@ -41,9 +43,9 @@ jobs:
           -net user,hostfwd=tcp::2345-:22
           -drive file=chr-${{ matrix.chr }}.img,format=raw,if=ide
 
-      - name: check
+      - name: check chr ${{ matrix.chr }} is up and running
         run: >-
-          ssh -vvvv
+          ssh
           127.0.0.1
           -p 2345
           -l admin
