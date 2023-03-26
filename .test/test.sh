@@ -5,10 +5,6 @@ set -o noclobber
 set -o errexit
 set -o pipefail
 
-# vars
-TEST_VALUE_NSENSITIVE="Kn4kk3ed5D4FuD3s7VeMmeecHMDhwgFaci54t7ETnFtARkQsi"
-TEST_VALUE_SENSITIVE="oobddvSAqPtDNagrjdPEkK4vxfox7euM2kXRtaJFqZjQZ5T77"
-
 # deps | get chr disk image
 wget -qO- \
   "https://download.mikrotik.com/routeros/${1}/chr-${1}.img.zip" \
@@ -37,11 +33,15 @@ cp .test/.ssh_config ~/.ssh/config
 ssh chr_test \
   "system resource print"
 
-# set test-values for backup to check after backup
+# establish test values for backup to verify their existence following the backup process
+TEST_VALUE_NSENSITIVE="Kn4kk3ed5D4FuD3s7VeMmeecHMDhwgFaci54t7ETnFtARkQsi"
+TEST_VALUE_SENSITIVE="oobddvSAqPtDNagrjdPEkK4vxfox7euM2kXRtaJFqZjQZ5T77"
 ## non-sensitive
+# shellcheck disable=SC2029
 ssh chr_test \
   "system identity set name=$TEST_VALUE_NSENSITIVE"
 ## sensitive
+# shellcheck disable=SC2029
 ssh chr_test \
   "ppp secret add name=test-backup-value password=$TEST_VALUE_SENSITIVE"
 
@@ -64,6 +64,38 @@ else
   echo "Versions are the same."
 fi
 
-
 # do backup
 bash -x mbkp.sh .test/test.cfg
+
+# check backup
+# shellcheck source=test.cfg
+source .test/test.cfg
+
+# check backup log for any fail
+if [[ -r $LOG ]]; then
+  if grep -i 'fail' $LOG; then
+    echo "test: 'fail' record found in log file"
+    exit 1
+  else
+    echo "test: 'fail' record not found in log file"
+  fi
+else
+  echo "test: log file does not exist"
+  exit 1
+fi
+
+
+# check decrypt process
+
+# check expected test-values in export
+
+# [[ -r 29e7738e-6f65-4991-998c-be1cc916803f/chr_test/chr_test_20230326_2043.backup ]]
+# [[ -r 29e7738e-6f65-4991-998c-be1cc916803f/chr_test/chr_test_20230326_2043.export.des3 ]]
+
+# shellcheck disable=SC2034
+# TGT_HOSTNAME="chr_test"
+# IDL="1s"
+# BKP_BINPWD="YUUM3y7th2fAfCumiArzrJrKETU5nMQLNjAbrKZbVsDodbkhfqJit39udRd94pRhR"
+# BKP_EXPPWD="rHap3Ahj99s44L2NFeZjZexAawLhhmF4MeNYe97dk5xAoPoMXeU3av9jqztpDZUKD"
+# ST_ROOT="29e7738e-6f65-4991-998c-be1cc916803f"
+# LOG default location
