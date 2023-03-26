@@ -128,7 +128,26 @@ function fn_backup_export {
  # Function for saving exported config
  EXP_TMP_FILE="/tmp/${RANDOM}.export"
 
- sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" export > ${EXP_TMP_FILE}
+ _ros_version=$( sleep ${IDL} \
+   && ${CMD_SSH} "${TGT_HOSTNAME}" \
+     "system resource print" \
+     | awk \
+     -F ':' \
+     '/version/ {sub(/^ */, "", $2); split($2, a, " "); split(a[1], b, "."); print b[1]}')
+ case $_ros_version in
+  "6")
+   _export_command="export"
+   ;;
+  "7")
+   _export_command="export show-sensitive"
+   ;;
+  "*")
+   echo "non-supported version"
+   exit 1
+   ;;
+ esac
+
+ sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" "${_export_command}" > ${EXP_TMP_FILE}
  ${CMD_SSL} des3 -salt \
    -k ${BKP_EXPPWD} \
    -in ${EXP_TMP_FILE} \
