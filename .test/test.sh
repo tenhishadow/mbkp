@@ -38,11 +38,5 @@ else
   echo "Versions are the same."
 fi
 
-# GithubRunner | dir prep
-# shellcheck source=test.cfg
-source .test/test.cfg
-mkdir -p "$ST_ROOT"
-sudo chown "$USER:$GROUP" "$ST_ROOT"
-
 # do backup
 bash -x mbkp.sh .test/test.cfg
