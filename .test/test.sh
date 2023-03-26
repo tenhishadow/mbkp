@@ -38,8 +38,10 @@ else
   echo "Versions are the same."
 fi
 
-# do backup
 ## sudo because of github actions and this:
 ### /usr/bin/chown: changing ownership of '29e7738e-6f65-4991-998c-be1cc916803f/chr_test/': Operation not permitted
 ### wtf?
+## replace ssh_config for test
+sudo cp .test/.ssh_config ~/.ssh/config
+# do backup
 sudo bash -x mbkp.sh .test/test.cfg
