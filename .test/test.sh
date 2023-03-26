@@ -90,8 +90,9 @@ openssl \
   des3 \
   -d \
   -salt \
+  -k "${BKP_EXPPWD}" \
   -in "${ST_ROOT}/${TGT_HOSTNAME}/*.export.des3" \
-  -out "${ST_ROOT}/${TGT_HOSTNAME}/*.export"
+  -out "${ST_ROOT}/${TGT_HOSTNAME}/.decrypted"
 
 # check expected test-values in export
 
