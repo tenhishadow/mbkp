@@ -39,4 +39,7 @@ else
 fi
 
 # do backup
-bash -x mbkp.sh .test/test.cfg
+## sudo because of github actions and this:
+### /usr/bin/chown: changing ownership of '29e7738e-6f65-4991-998c-be1cc916803f/chr_test/': Operation not permitted
+### wtf?
+sudo bash -x mbkp.sh .test/test.cfg
