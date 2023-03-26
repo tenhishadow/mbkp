@@ -41,6 +41,7 @@ fi
 # GithubRunner | dir prep
 # shellcheck source=test.cfg
 source .test/test.cfg
+mkdir -p "$ST_ROOT"
 sudo chown "$USER" "$ST_ROOT"
 
 # do backup
