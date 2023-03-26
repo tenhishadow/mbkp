@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ros:
+        chr:
           - '6.48.6'
           - '7.8'
     steps:
@@ -19,14 +19,17 @@ jobs:
       - name: do checkout
         uses: actions/checkout@master
 
-      - name: install qemu tools
+      - name: deps | install
         run: |
           sudo apt update
           sudo apt install -y qemu-system-x86 wget
 
-# # get it from mikrotik
-# wget -qO- https://download.mikrotik.com/routeros/${VERSION}/chr-${VERSION}.img.zip \
-#   | zcat > chr-${VERSION}.img
+      - name: deps | get chr ${{ matrix.chr }}
+        run: >-
+          wget -qO-
+          https://download.mikrotik.com/routeros/${{ matrix.chr }}/chr-${{ matrix.chr }}.img.zip
+          | zcat
+          > chr-${{ matrix.chr }}.img
 #
 # qemu-system-x86_64 \
 #   -net nic,model=virtio \
