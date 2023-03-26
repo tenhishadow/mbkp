@@ -86,12 +86,13 @@ else
 fi
 
 # check decrypt process
+_encrypted_backup=$(find "${ST_ROOT}/${TGT_HOSTNAME}" -type f -name '*.export.des3')
 openssl \
   des3 \
   -d \
   -salt \
   -k "${BKP_EXPPWD}" \
-  -in "${ST_ROOT}/${TGT_HOSTNAME}/*.export.des3" \
+  -in "$_encrypted_backup" \
   -out "${ST_ROOT}/${TGT_HOSTNAME}/.decrypted"
 
 # check expected test-values in export
