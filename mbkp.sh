@@ -128,6 +128,7 @@ function fn_backup_export {
  # Function for saving exported config
  EXP_TMP_FILE="/tmp/${RANDOM}.export"
 
+ # define export command depends on ros version
  _ros_version=$( sleep ${IDL} \
    && ${CMD_SSH} "${TGT_HOSTNAME}" \
      "system resource print" \
