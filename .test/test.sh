@@ -5,6 +5,10 @@ set -o noclobber
 set -o errexit
 set -o pipefail
 
+# vars
+TEST_VALUE_NSENSITIVE="Kn4kk3ed5D4FuD3s7VeMmeecHMDhwgFaci54t7ETnFtARkQsi"
+TEST_VALUE_SENSITIVE="oobddvSAqPtDNagrjdPEkK4vxfox7euM2kXRtaJFqZjQZ5T77"
+
 # deps | get chr disk image
 wget -qO- \
   "https://download.mikrotik.com/routeros/${1}/chr-${1}.img.zip" \
@@ -36,14 +40,15 @@ ssh chr_test \
 # set test-values for backup to check after backup
 ## non-sensitive
 ssh chr_test \
-  "system identity set name=Kn4kk3ed5D4FuD3s7VeMmeecHMDhwgFaci54t7ETnFtARkQsi"
+  "system identity set name=$TEST_VALUE_NSENSITIVE"
 ## sensitive
 ssh chr_test \
-  "ppp secret add name=test-backup-value password=oobddvSAqPtDNagrjdPEkK4vxfox7euM2kXRtaJFqZjQZ5T77"
+  "ppp secret add name=test-backup-value password=$TEST_VALUE_SENSITIVE"
 
 ## temp
+echo "CHECKIT"
 ssh chr_test \
-  "export"
+  "export" | grep --quiet $TEST_VALUE_NSENSITIVE
 
 # check that we run the same we launch(ну нет уже веры никому)
 version_running=$(ssh \
