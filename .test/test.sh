@@ -38,7 +38,13 @@ else
   echo "Versions are the same."
 fi
 
-# replace ssh_config for a test
+# prep ssh for a test
+if [[ -d ~/.ssh ]]; then
+  return
+else
+  mkdir ~/.ssh
+  chmod 0700 ~/.ssh
+fi
 cp .test/.ssh_config ~/.ssh/config
 
 # do backup
