@@ -27,6 +27,6 @@ jobs:
           sudo apt-get -yq install qemu-system-x86 wget
 
       - name: test | chr ${{ matrix.chr }}
-        run: bash -x ./test/test.sh "${{ matrix.chr }}"
+        run: bash -x .test/test.sh "${{ matrix.chr }}"
 
 ...

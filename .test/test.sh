@@ -5,10 +5,6 @@ set -o noclobber
 set -o errexit
 set -o pipefail
 
-[[ -z $1 ]] \
-  && echo "arg1 is not passed" \
-  && exit 1
-
 # deps | get chr disk image
 wget -qO- \
   "https://download.mikrotik.com/routeros/${1}/chr-${1}.img.zip" \
