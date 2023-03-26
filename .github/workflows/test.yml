@@ -45,14 +45,14 @@ jobs:
 
       - name: check chr ${{ matrix.chr }} is up and running
         run: >-
-          ssh
-          127.0.0.1
-          -p 2345
-          -l admin
-          -o StrictHostKeyChecking=no
-          -o UserKnownHostsFile=/dev/null
+          ssh -f ./test/.ssh_config chr_test
           system resource print
 
-
+          # ssh
+          # 127.0.0.1
+          # -p 2345
+          # -l admin
+          # -o StrictHostKeyChecking=no
+          # -o UserKnownHostsFile=/dev/null
 
 ...

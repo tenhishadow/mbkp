@@ -1,0 +1,12 @@
+# vim:ft=sshconfig
+
+Host chr_test
+  CheckHostIP            no
+  HashKnownHosts         no
+  Hostname               127.0.0.1
+  PasswordAuthentication yes
+  Port                   2345
+  StrictHostKeyChecking  no
+  User                   admin
+  UserKnownHostsFile     /dev/null
+
