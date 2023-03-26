@@ -45,7 +45,7 @@ jobs:
 
       - name: check chr ${{ matrix.chr }} is up and running
         run: >-
-          ssh -f ./test/.ssh_config chr_test
+          ssh -F .test/.ssh_config chr_test
           system resource print
 
           # ssh
