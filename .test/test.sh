@@ -38,5 +38,8 @@ else
   echo "Versions are the same."
 fi
 
+# replace ssh_config for a test
+cp .test/.ssh_config ~/.ssh/config
+
 # do backup
 bash -x mbkp.sh .test/test.cfg
