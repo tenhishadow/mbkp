@@ -77,7 +77,8 @@ if [[ -r $LOG ]]; then
     echo "test: 'fail' record found in log file"
     exit 1
   else
-    echo "test: 'fail' record not found in log file"
+    [[ $( grep "okay" $LOG  | wc -l ) == "2" ]] \
+      && echo "test: both backups are okay in $LOG"
   fi
 else
   echo "test: log file does not exist"
