@@ -1,5 +1,4 @@
 # vim:ft=sshconfig
-
 Host chr_test
   CheckHostIP            no
   HashKnownHosts         no
@@ -9,4 +8,3 @@ Host chr_test
   StrictHostKeyChecking  no
   User                   admin
   UserKnownHostsFile     /dev/null
-
