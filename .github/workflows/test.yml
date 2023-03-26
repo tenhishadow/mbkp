@@ -1,0 +1,47 @@
+---
+
+name: test
+
+on:
+  pull_request
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ros:
+          - '6.48.6'
+          - '7.8'
+    steps:
+
+      - name: do checkout
+        uses: actions/checkout@master
+
+      - name: install qemu tools
+        run: |
+          sudo apt update
+          sudo apt install -y qemu-system-x86 wget
+
+# # get it from mikrotik
+# wget -qO- https://download.mikrotik.com/routeros/${VERSION}/chr-${VERSION}.img.zip \
+#   | zcat > chr-${VERSION}.img
+#
+# qemu-system-x86_64 \
+#   -net nic,model=virtio \
+#   -net user,hostfwd=tcp::2227-:22 \
+#   -display none \
+#   -m 256 \
+#   -drive file=chr-${VERSION}.img,format=raw,if=ide \
+#   -daemonize
+#   # -hda chr-${VERSION}.img
+#
+# # detach???
+#
+# # after that just for login
+# #ssh 127.0.0.1 -p 2227 -l admin -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '/system/resource/print'
+
+
+
+...
