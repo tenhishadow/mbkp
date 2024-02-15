@@ -13,9 +13,7 @@ jobs:
       matrix:
         chr:
           - '6.49.10'
-          - '7.10.2'
-          - '7.11'
-          - '7.12'
+          - '7.13.4'
     steps:
 
       - name: do checkout
