@@ -57,7 +57,7 @@ function fn_check_log {
        '#######' \
        "# logfile for ${0}" \
        '# The format is:' \
-       '#       DATE;STATE;FILENAME' \
+       '#       DATE;STATE;FILENAME;DEVICE_HOSTNAME;DEVICE_MODEL;DEVICE_REVISION;DEVICE_SERIAL' \
        '# author: tenhi(adm@tenhi.dev)' \
        '#######' '   ###' '    #' ' ' > $LOG
    fi
@@ -107,7 +107,12 @@ function fn_check_directory {
 }
 
 function fn_mikrotik_cleanup {
-# Function for cleaning up target mikrotik
+  # gather facts about device
+  DEVICE_HOSTNAME=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system identity get name ]' | awk '{ sub(/\r$/, ""); print }')
+  DEVICE_MODEL=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get model ]' | awk '{ sub(/\r$/, ""); print }')
+  DEVICE_REVISION=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get revision ]' | awk '{ sub(/\r$/, ""); print }')
+  DEVICE_SERIAL=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get serial-number ]' | awk '{ sub(/\r$/, ""); print }')
+  # cleanup before backup
   ${CMD_SSH} "${TGT_HOSTNAME}" "ip dns cache flush"
   ${CMD_SSH} "${TGT_HOSTNAME}" "console clear-history"
 }
@@ -149,12 +154,13 @@ function fn_backup_export {
  esac
 
  sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" "${_export_command}" > ${EXP_TMP_FILE}
- ${CMD_SSL} des3 -salt \
+ ${CMD_SSL} aes-256-cbc -salt -pbkdf2 -iter 100000 \
    -k ${BKP_EXPPWD} \
    -in ${EXP_TMP_FILE} \
-   -out "${ST_FULL}${TGT_BKPNAME_EXP}.des3"
+   -out "${ST_FULL}${TGT_BKPNAME_EXP}.enc"
  ${CMD_RM} ${EXP_TMP_FILE}
 }
+
 
 function fn_backup_retention {
 # Function for rotating old backups
@@ -170,17 +176,17 @@ function fn_log {
   # log about binary backup
   if [[ -r ${ST_FULL}${TGT_BKPNAME_BIN} ]]
   then
-    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_BIN}" >> $LOG
+    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_BIN};${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   else
-    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_BIN}" >> $LOG
+    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_BIN};${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   fi
 
   # log about text backup
-  if [[ -r ${ST_FULL}${TGT_BKPNAME_EXP}".des3" ]]
+  if [[ -r ${ST_FULL}${TGT_BKPNAME_EXP}".enc" ]]
   then
-    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_EXP}.des3" >> $LOG
+    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_EXP}.enc;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   else
-    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_EXP}.des3" >> $LOG
+    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_EXP}.enc;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   fi
 }
 

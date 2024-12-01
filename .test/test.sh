@@ -83,12 +83,9 @@ else
 fi
 
 # check decrypt process
-_encrypted_backup=$(find "${ST_ROOT}/${TGT_HOSTNAME}" -type f -name '*.export.des3')
+_encrypted_backup=$(find "${ST_ROOT}/${TGT_HOSTNAME}" -type f -name '*.export.enc')
 _decrypted_backup="${ST_ROOT}/${TGT_HOSTNAME}/backup.decrypted"
-openssl \
-  des3 \
-  -d \
-  -salt \
+openssl aes-256-cbc -d -salt -pbkdf2 -iter 100000 \
   -k "${BKP_EXPPWD}" \
   -in "$_encrypted_backup" \
   -out "$_decrypted_backup"

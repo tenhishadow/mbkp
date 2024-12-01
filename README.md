@@ -81,5 +81,5 @@ as a plain text via ssh, then it encrypt this file and move it to the destinatio
 Encrypted exported config can be easly decrypted with openssl command:
 ```
  # NOTE: decrypt the file
- # openssl des3 -d -salt -in encryptedfile.txt -out normalfile.txt
+ # openssl aes-256-cbc -d -salt -pbkdf2 -iter 100000 -k password -in file.enc -out file
 ```
