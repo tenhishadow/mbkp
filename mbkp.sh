@@ -57,7 +57,7 @@ function fn_check_log {
        '#######' \
        "# logfile for ${0}" \
        '# The format is:' \
-       '#       DATE;STATE;FILENAME' \
+       '#       DATE;STATE;FILENAME;DEVICE_HOSTNAME;DEVICE_MODEL;DEVICE_REVISION;DEVICE_SERIAL' \
        '# author: tenhi(adm@tenhi.dev)' \
        '#######' '   ###' '    #' ' ' > $LOG
    fi
@@ -107,9 +107,14 @@ function fn_check_directory {
 }
 
 function fn_mikrotik_cleanup {
-# Function for cleaning up target mikrotik
+  # cleanup before backup
   ${CMD_SSH} "${TGT_HOSTNAME}" "ip dns cache flush"
   ${CMD_SSH} "${TGT_HOSTNAME}" "console clear-history"
+  # gather facts about device
+  DEVICE_HOSTNAME=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system identity get name ]' )
+  DEVICE_MODEL=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system routerboard get model ]' )
+  DEVICE_REVISION=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system routerboard get revision ]' )
+  DEVICE_SERIAL=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system routerboard get serial-number ]' )
 }
 
 function fn_backup_binary {
@@ -170,17 +175,17 @@ function fn_log {
   # log about binary backup
   if [[ -r ${ST_FULL}${TGT_BKPNAME_BIN} ]]
   then
-    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_BIN}" >> $LOG
+    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_BIN};${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   else
-    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_BIN}" >> $LOG
+    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_BIN};${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   fi
 
   # log about text backup
   if [[ -r ${ST_FULL}${TGT_BKPNAME_EXP}".des3" ]]
   then
-    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_EXP}.des3" >> $LOG
+    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_EXP}.des3;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   else
-    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_EXP}.des3" >> $LOG
+    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_EXP}.des3;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   fi
 }
 
