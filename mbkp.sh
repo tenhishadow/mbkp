@@ -161,6 +161,7 @@ function fn_backup_export {
  ${CMD_RM} ${EXP_TMP_FILE}
 }
 
+
 function fn_backup_retention {
 # Function for rotating old backups
   # Search old backups only one directory, not tree
