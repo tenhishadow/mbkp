@@ -154,7 +154,7 @@ function fn_backup_export {
  esac
 
  sleep ${IDL} && ${CMD_SSH} "${TGT_HOSTNAME}" "${_export_command}" > ${EXP_TMP_FILE}
- ${CMD_SSL} des3 -salt \
+ ${CMD_SSL} aes-256-cbc -salt -pbkdf2 -iter 100000 \
    -k ${BKP_EXPPWD} \
    -in ${EXP_TMP_FILE} \
    -out "${ST_FULL}${TGT_BKPNAME_EXP}.des3"
