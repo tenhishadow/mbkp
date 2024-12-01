@@ -157,7 +157,7 @@ function fn_backup_export {
  ${CMD_SSL} aes-256-cbc -salt -pbkdf2 -iter 100000 \
    -k ${BKP_EXPPWD} \
    -in ${EXP_TMP_FILE} \
-   -out "${ST_FULL}${TGT_BKPNAME_EXP}.des3"
+   -out "${ST_FULL}${TGT_BKPNAME_EXP}.enc"
  ${CMD_RM} ${EXP_TMP_FILE}
 }
 
@@ -182,11 +182,11 @@ function fn_log {
   fi
 
   # log about text backup
-  if [[ -r ${ST_FULL}${TGT_BKPNAME_EXP}".des3" ]]
+  if [[ -r ${ST_FULL}${TGT_BKPNAME_EXP}".enc" ]]
   then
-    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_EXP}.des3;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
+    printf '%s\n' "${CMD_DATE};okay;${TGT_BKPNAME_EXP}.enc;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   else
-    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_EXP}.des3;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
+    printf '%s\n' "${CMD_DATE};fail;${TGT_BKPNAME_EXP}.enc;${DEVICE_HOSTNAME};${DEVICE_MODEL};${DEVICE_REVISION};${DEVICE_SERIAL}" >> $LOG
   fi
 }
 
