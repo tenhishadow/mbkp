@@ -111,10 +111,10 @@ function fn_mikrotik_cleanup {
   ${CMD_SSH} "${TGT_HOSTNAME}" "ip dns cache flush"
   ${CMD_SSH} "${TGT_HOSTNAME}" "console clear-history"
   # gather facts about device
-  DEVICE_HOSTNAME=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system identity get name ]' )
-  DEVICE_MODEL=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system routerboard get model ]' )
-  DEVICE_REVISION=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system routerboard get revision ]' )
-  DEVICE_SERIAL=$( ${CMD_SSH} "${TGT_HOSTNAME}" ':put [ system routerboard get serial-number ]' )
+  DEVICE_HOSTNAME=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system identity get name ]' )
+  DEVICE_MODEL=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get model ]' )
+  DEVICE_REVISION=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get revision ]' )
+  DEVICE_SERIAL=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get serial-number ]' )
 }
 
 function fn_backup_binary {
