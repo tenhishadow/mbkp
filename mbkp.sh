@@ -107,14 +107,14 @@ function fn_check_directory {
 }
 
 function fn_mikrotik_cleanup {
-  # cleanup before backup
-  ${CMD_SSH} "${TGT_HOSTNAME}" "ip dns cache flush"
-  ${CMD_SSH} "${TGT_HOSTNAME}" "console clear-history"
   # gather facts about device
   DEVICE_HOSTNAME=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system identity get name ]' )
   DEVICE_MODEL=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get model ]' )
   DEVICE_REVISION=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get revision ]' )
   DEVICE_SERIAL=$( ${CMD_SSH} ${TGT_HOSTNAME} ':put [ system routerboard get serial-number ]' )
+  # cleanup before backup
+  ${CMD_SSH} "${TGT_HOSTNAME}" "ip dns cache flush"
+  ${CMD_SSH} "${TGT_HOSTNAME}" "console clear-history"
 }
 
 function fn_backup_binary {

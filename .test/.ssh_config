@@ -8,3 +8,4 @@ Host chr_test
   StrictHostKeyChecking  no
   User                   admin
   UserKnownHostsFile     /dev/null
+  LogLevel               quiet
